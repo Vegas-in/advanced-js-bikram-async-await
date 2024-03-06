@@ -102,3 +102,55 @@ async function printPugVsPikachu () {
 
 // ejercicio 7
 
+async function getRandomCharacter () {
+
+    let rickList = await fetch (`https://rickandmortyapi.com/api/character`) // pillamos la lista total de personajes
+    let data = await rickList.json(); // devolvemos la lista total y pasamos a json
+    
+    let tamano = data.results.length; // declara el tamaño total de results
+    let random = Math.ceil(Math.random() * tamano); // se obtiene un numero random entre 1 y el tamaño total
+    
+    let respuesta2 = await fetch (`https://rickandmortyapi.com/api/character/${random}`); // devuelve un pokemon random
+    let resultado2 = await respuesta2.json(); // pasamos a json
+
+    return resultado2;
+
+}
+
+// 8 - Declara una función **getRandomCharacterInfo** que retorne de un personaje su imagen, nombre, episodios en los que aparece y el nombre del primer episodio en el que aparece + fecha de estreno, tendrás que hacer otro fetch para llegar a los ultimos datos. Formato de retorno => (return {img, name, episodes, firstEpisode, dateEpisode})
+
+async function getRandomCharacterInfo () {
+
+    /* RICK SANCHEZ 1 */
+    let rickSanchez = await fetch (`https://rickandmortyapi.com/api/character/1`) // pillamos a rick de la lista
+    let data = await rickSanchez.json(); // devolvemos a rick y pasamos a json
+
+    let img = data.image; // sacamos la imagen
+    let name = data.name; // sacamos el nombre
+    let episodes = data.episode; // numero de episodios en los que aparece
+    let primerEpisodio = data.episode[0];
+
+    
+    /* EPISODIO 1 */
+    let nombrePrimerEpisodio = await fetch (`${primerEpisodio}`)
+    let data2 = await nombrePrimerEpisodio.json();
+
+    let firstEpisode = data2.name; // nombre del primer episiodio en el que aparece
+    let dateEpisode = data2.air_date; // fecha de publicacion de primer episodio
+
+
+    return {img, name, episodes, firstEpisode, dateEpisode};
+
+}
+
+// 9 - Pinta los anteriores datos en el DOM (no se testea)
+async function pintarEnDom () {
+let data = await getRandomCharacterInfo();
+document.querySelector('body').innerHTML +=
+                                `<section>
+                                    <h1>${data.name}</h1>
+                                    <img src="${data.img}" alt="Rick Sanchez">
+                                    <h3>Episodes: ${data.episodes}</h3>
+                                    <h3>First episode: ${data.fir}</h3>
+                                    <h4>First episode: ${data.dateEpisode}</h4>`
+}
